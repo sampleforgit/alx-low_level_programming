@@ -1,60 +1,34 @@
 #include <stdio.h>
-
 /**
-  *main - print every combination of 3 digit numbers
-  *without repetition.
+  * main - Prints 3 combination of numbers
   *
-  *Return: always 0, success
-  *
+  * Return: Always (Success)
   */
-
 int main(void)
-
 {
+	int c, i, k;
 
-	int x;
-
-	int y;
-
-	int z;
-
-
-
-	for (x = 0; x < 10; x++)
+	for (c = '0'; c <= '9'; c++)
 
 	{
-
-		for (y = 0; y < 10; y++)
-
+		for (i = '0'; i <= '9'; i++)
 		{
-
-			for (z = 0; z < 10; z++)
-
+			for (k = '0'; k <= '9'; k++)
 			{
-
-				if (x < y && y < z)
-
+				if (c < i && i < k)
 				{
-
-					putchar(x % 10 + '0');
-
-					putchar(y % 10 + '0');
-
-					putchar(z % 10 + '0');
-
-					if (x < 7)
-
+					putchar(c);
+					putchar(i);
+					putchar(k);
+					if (c != '7')
 					{
-
-						putchar(44);
-
-						putchar(32);
-
+						putchar(',');
+						putchar(' ');
 					}
 				}
 			}
 		}
 	}
-putchar('\n');
-return (0);
+	putchar('\n');
+	return (0);
 }

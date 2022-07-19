@@ -1,39 +1,56 @@
 #include "lists.h"
 /**
- * delete_nodeint_at_index - deletes the nodet at index of listint_t list
- * @head: double pointer to the head of the list
- * @index: index of the node should be deleted
- * Return: 1 if it succeeded and -1 if it failed
+ * delete_nodeint_at_index - deletes a node at an index
+ * @head: pointer to the head of the list
+ * @index: index of the node to be added
+ * Return: the address of the node
  */
 int delete_nodeint_at_index(listint_t **head, unsigned int index)
 {
-	listint_t *node;
-	unsigned int pos;
+	listint_t *old_node = NULL;
 
-	pos = 0;
-	while (*head)
+	listint_t *previous_node = NULL;
+
+	unsigned int i = 0, list_len = listint_len(*head);
+
+	if ((index > list_len) || (list_len == 0))
+		return (-1);
+	while (head != NULL)
 	{
-		/* with the position we find the index we need to delete */
-		if (pos == index)
+		if (i == index)
 		{
-			/* node is the one we want to delete */
-			/* that is in the index position */
-			/* so we point to that  node through *head */
-			node = (*head);
-			/* *head moves to next node */
-			(*head) = (*head)->next;
-			/* node remains in the index position and we deleted */
-			/* releasing that memory */
-			free(node);
-			/* success return 1 */
+			old_node = *head;
+			if (i == 0)
+			{
+				*head = old_node->next;
+				free(old_node);
+				return (1);
+			}
+			previous_node->next = old_node->next;
+			free(old_node);
 			return (1);
 		}
-		/* if the position isn't equal to the index we're looking for */
-		/* move head to next */
-		head = &(*head)->next;
-		/* and counte position keeps incrementing */
-		pos++;
+		else if ((i + 1) == index)
+			previous_node = *head;
+		head = &((*head)->next);
+		i++;
 	}
-	/* failed return -1 */
 	return (-1);
+}
+/**
+ * listint_len - counts the number of nodes in a linked list
+ * @h: head of the list
+ * Return: the number of elements
+ */
+size_t listint_len(const listint_t *h)
+{
+	const listint_t *cursor = h;
+	size_t count = 0;
+
+	while (cursor != NULL)
+	{
+		count += 1;
+		cursor = cursor->next;
+	}
+	return (count);
 }

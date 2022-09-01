@@ -1,51 +1,42 @@
 #include "lists.h"
 /**
- * insert_dnodeint_at_index - inserts node at index
- * @h: head of node
- * @idx: index to insert node
- * @n: data for new node
- * Return: list with inserted node
+ * insert_dnodeint_at_index - inserts a new node at a given position
+ * @h: a double pointer to the head of the DLL
+ * @idx: index of the list where the new node should be added
+ * @n: the content of the new node to be added
+ * Return: the address of the new node or NULL if it failed
  */
 dlistint_t *insert_dnodeint_at_index(dlistint_t **h, unsigned int idx, int n)
 {
-	unsigned int count = 1;
-
-	dlistint_t *temp = NULL, *new = NULL;
-
-	new = malloc(sizeof(dlistint_t));
-	if (new == NULL || h == NULL)
-		return (NULL);
-	new->n = n;
-	temp = *h;
+	dlistint_t *new_node;
+	dlistint_t *aux_h;
+	/* case asked idx is 0 or h is null at the beggining, recursion */
 	if (idx == 0)
 	{
-		*h = new;
-		new->next = temp;
-		new->prev = NULL;
-		temp->prev = new;
-		return (new);
+		return (add_dnodeint(h, n));
 	}
-	while (temp->next != NULL)
+	/* traverse the list */
+	aux_h = *h;
+	while (idx > 1)
 	{
-		if (count == idx) /* found back */
-		{
-			new->prev = temp; /* current prev to back link */
-			new->next = temp->next; /* current next to front link*/
-			temp->next = new; /* back next link */
-			new->next->prev = new; /* from prev link */
-		}
-		temp = temp->next;
+		aux_h = aux_h->next;
+		if (aux_h == NULL)
+			return (NULL);
+		idx--;
 	}
-	if (count == idx) /* end of DLL */
+	/* case at the end, recursion */
+	if (aux_h->next == NULL)
 	{
-		new->prev = temp; /* current prev to back link */
-		new->next = NULL; /* current next to NULL*/
-		temp->next = new; /* back next link */
+		return (add_dnodeint_end(h, n));
 	}
-	if (count < idx)
-	{
-		free(new);
+	/* idx found then add new_node */
+	new_node = malloc(sizeof(dlistint_t));
+	if (new_node == NULL)
 		return (NULL);
-	}
-	return (new);
+	new_node->n = n;
+	new_node->prev = aux_h;
+	new_node->next = aux_h->next;
+	aux_h->next->prev = new_node;
+	aux_h->next = new_node;
+	return (new_node);
 }

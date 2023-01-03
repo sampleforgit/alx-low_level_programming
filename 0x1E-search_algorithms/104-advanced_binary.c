@@ -1,73 +1,78 @@
 #include "search_algos.h"
 
 /**
-  * print_array - print array with limits in l and r
-  * @array: set of numbers
-  * @l: left limit
-  * @r: right limit
-  * Return: nothing
-  */
-void print_array(int *array, size_t l, size_t r)
+ * print_array - prints the array of ints, separated with commas
+ *
+ * @array: a pointer to the array to print
+ * @first: the first index to print
+ * @last: the last index to print
+ */
+
+void print_array(int *array, size_t first, size_t last)
 {
+	size_t i;
+
 	printf("Searching in array: ");
-	for (l = l; l < r; l++)
-		printf("%d, ", array[l]);
-	printf("%d\n", array[l]);
+	for (i = first; i <= last; i++)
+	{
+		if (i != first)
+			printf(", ");
+		printf("%d", array[i]);
+	}
+	printf("\n");
 }
 
 /**
-  * bi_se - search the first ocurrency of a value in the array recursively
-  * @array: set of numbers
-  * @l: left limit
-  * @r: right limit
-  * @value: value to search
-  * Return: return the first index located otherwise -1
-  */
-size_t bi_se(int *array, size_t l, size_t r, int value)
+ * binary_rec - searches for a value in an array of integers recursively
+ *
+ * @array: a pointer to the first element of the array to search in
+ * @first: the minimum index of the array
+ * @last: the maximum index of the array
+ * @value: the value to search for
+ *
+ * Return: the index where value is located or -1 on failure or not found
+ */
+
+int binary_rec(int *array, size_t first, size_t last, int value)
 {
-	int mid = 0, index = -1;
+	size_t i = 0;
 
-	if (l > r)
-		return (-1);
-
-	print_array(array, l, r);
-	mid = (l + r) / 2;
-	if (array[mid] < value)
+	if (array)
 	{
-		l = mid + 1;
-		index = bi_se(array, l, r, value);
-	}
-	else if (array[mid] > value)
-	{
-		r = mid - 1;
-		index = bi_se(array, l, r, value);
-	}
-	else
-		if (mid - 1 >= 0 && array[mid - 1] == array[mid])
-			index = bi_se(array, l, mid, value);
-		else
-			index = mid;
+		if (first <= last)
+		{
+			print_array(array, first, last);
+			i = (first + last) / 2;
 
-	return (index);
+			if (array[first] == value)
+				return (first);
+
+			if (value == array[i] && array[i - 1] != value)
+				return (i);
+			if (value > array[i])
+				return (binary_rec(array, i + 1, last, value));
+			if (value <= array[i])
+				return (binary_rec(array, first, i, value));
+		}
+	}
+
+	return (-1);
 }
 
 /**
-  * advanced_binary - search the first ocurrency of a value in the array
-  * @array: set of numbers
-  * @size: size of the array
-  * @value: value to search
-  * Return: return the first index located otherwise -1
-  */
+ * advanced_binary - searches for a value in an array of integers
+ *
+ * @array: a pointer to the first element of the array to search in
+ * @size: the number of elements in array
+ * @value: the value to search for
+ *
+ * Return: the index where value is located or -1 on failure or not found
+ */
+
 int advanced_binary(int *array, size_t size, int value)
 {
-	int index = -1;
+	if (array)
+		return (binary_rec(array, 0, size - 1, value));
 
-	if (array == NULL || size == 0)
-		return (-1);
-
-	index = bi_se(array, 0, size - 1, value);
-
-	if (index >= 0)
-		return (index);
 	return (-1);
 }
